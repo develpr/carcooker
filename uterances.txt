@@ -1,0 +1,5 @@
+AreCookiesDone Are the cookies done
+
+CurrentTemperature What is the temperature of sensor {Id}
+
+AverageTemperature What was the temperature {Date}

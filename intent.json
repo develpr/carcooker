@@ -1,0 +1,26 @@
+{
+	"intents": [
+		{
+			"intent": "AreCookiesDone",
+			"slots": []
+		},
+		{
+			"intent": "CurrentTemperature",
+			"slots": [
+				{
+					"name": "Id",
+					"type": "AMAZON.NUMBER"
+				}
+			]
+		},
+		{
+			"intent": "AverageTemperature",
+			"slots": [
+				{
+					"name": "Date",
+					"type": "AMAZON.DATE"
+				}
+			]
+		}
+	]
+}
