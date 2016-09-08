@@ -25,5 +25,5 @@ AlexaRoute::intent('/alexa', 'AreCookiesDone', 'CarCooker\Http\Controllers\CarCo
 
 AlexaRoute::intent('/alexa', 'AverageTemp', 'CarCooker\Http\Controllers\CarCooker@averageTemperature');
 
-
+AlexaRoute::intent('/alexa', 'TellMe', 'CarCooker\Http\Controllers\CarCooker@tellMeAboutCarCookies');
 
