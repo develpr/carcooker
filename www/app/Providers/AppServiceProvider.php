@@ -10,6 +10,7 @@ class AppServiceProvider extends ServiceProvider
         \CarCooker\Contracts\Repositories\SensorRepository::class => \CarCooker\Repositories\EloquentSensorRepository::class,
         \CarCooker\Contracts\Sensor::class => \CarCooker\Domain\EloquentSensor::class,
         \CarCooker\Contracts\SensorReading::class => \CarCooker\Domain\EloquentSensorReading::class,
+        \CarCooker\Contracts\Repositories\StopTimeRepository::class => \CarCooker\Repositories\StopTimeRepository::class,
     ];
     /**
      * Bootstrap any application services.

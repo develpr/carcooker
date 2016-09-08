@@ -1,5 +1,6 @@
 <?php  namespace CarCooker\Http\Controllers;
 
+use CarCooker\Contracts\Repositories\StopTimeRepository;
 use CarCooker\Contracts\Sensor;
 use CarCooker\Contracts\Repositories\SensorRepository;
 use CarCooker\Device;
@@ -17,14 +18,16 @@ class CarCooker extends  BaseController{
 	 * @var SensorRepository
 	 */
 	private $sensorRepository;
+	private $stopTimeRepository;
 
 	/**
 	 * Biker constructor.
 	 * @param SensorRepository $sensorRepository
      */
-	function __construct(SensorRepository $sensorRepository)
+	function __construct(SensorRepository $sensorRepository, StopTimeRepository $stopTimeRepository)
 	{
 		$this->sensorRepository = $sensorRepository;
+		$this->stopTimeRepository = $stopTimeRepository;
 	}
 
 	/**
@@ -44,7 +47,7 @@ class CarCooker extends  BaseController{
 
 	public function tellMeAboutCarCookies(){
 		/** @var Sensor $sensor */
-		$sensor = $this->sensorRepository->findById(Alexa::slot("Id"));
+		$sensor = $this->sensorRepository->findById(1);
 		if( ! $sensor ){
 			Alexa::say("Sorry, I can't find a sensor with ID " . Alexa::slot("Id"))->endSession();
 		}
@@ -55,8 +58,8 @@ class CarCooker extends  BaseController{
 			Alexa::say("Sorry, wasn't able to retrieve a sensor reading!")->endSession();
 		}
 
-		$stopDataSource = new StopDataSource();
-		$time = $stopDataSource->getRawDataFromSensor(Alexa::slot("Id"));
+		$stopDataSource = $this->stopTimeRepository->getStopTime();
+		$time = $stopDataSource->getRawDataFromSensor();
 
 		$ssml = '<speak><audio src="'.self::AUDIO_DING_URI.'" />Car temperature is <say-as interpret-as="unit">'.$latestSensorReading->getTemperature().' degrees fahrenheit</say-as>. The cookies have been cooking for <say-as interpret-as="time">' . $time . '</say-as></speak>';
 		return Alexa::ssml($ssml)->endSession();

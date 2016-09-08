@@ -17,7 +17,7 @@ class StopDataSource{
 	/**
 	 * @return array
 	 */
-	public function getRawDataFromSensor($sensorId)
+	public function getRawDataFromApi()
 	{
 		$sourceUrl = $this->config->get('carcooker.stop_time_data_source_uri');
 
@@ -33,8 +33,6 @@ class StopDataSource{
 			return null;
 		}
 
-		//todo: note that we've built this so that we could in theory support additional sensors, but we're "faking" it
-		//Current temperature is: 76.019140625
 		$result = [
 			'stopTime' => $time,
 		];
