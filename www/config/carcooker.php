@@ -12,4 +12,6 @@ return [
     //todo: this could be expanded to support multiple sensors if desired
     'data_source_uri' => 'http://carcookies.kristenchonowski.com/api/readTemp.php',
 
+    'stop_time_data_source_uri' => 'http://carcookies.kristenchonowski.com/api/stopTime.php'
+
 ];
