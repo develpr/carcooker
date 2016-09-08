@@ -3,6 +3,7 @@
 use CarCooker\Contracts\Sensor;
 use CarCooker\Contracts\Repositories\SensorRepository;
 use CarCooker\Device;
+use CarCooker\Services\Data\StopDataSource;
 use Illuminate\Routing\Controller as BaseController;
 use \Alexa;
 
@@ -31,14 +32,34 @@ class CarCooker extends  BaseController{
 	 */
 	public function handleLaunch(){
 //		$device = $this->retrieveOrCreateDevice();
-		return Alexa::say("Hello, I am Arrow's car cooking assistant. Would you like to bake some cookies?");
+		return Alexa::say("Hello, I am Arrow Lab's car cookies cooking assistant. Car Cookie timer initiated. C is for cookie and cookie is for me!");
 	}
 
 	/**
 	 * Handle the launch event for the app
 	 */
 	public function handleSessionEnded(){
-		return Alexa::say("Goodbye")->endSession();
+		return Alexa::say("You’re saving one for me, right?")->endSession();
+	}
+
+	public function tellMeAboutCarCookies(){
+		/** @var Sensor $sensor */
+		$sensor = $this->sensorRepository->findById(Alexa::slot("Id"));
+		if( ! $sensor ){
+			Alexa::say("Sorry, I can't find a sensor with ID " . Alexa::slot("Id"))->endSession();
+		}
+
+		$latestSensorReading = $sensor->getLatestSensorReading();
+
+		if( ! $latestSensorReading ){
+			Alexa::say("Sorry, wasn't able to retrieve a sensor reading!")->endSession();
+		}
+
+		$stopDataSource = new StopDataSource();
+		$time = $stopDataSource->getRawDataFromSensor(Alexa::slot("Id"));
+
+		$ssml = '<speak><audio src="'.self::AUDIO_DING_URI.'" />Car temperature is <say-as interpret-as="unit">'.$latestSensorReading->getTemperature().' degrees fahrenheit</say-as>. The cookies have been cooking for <say-as interpret-as="time">' . $time . '</say-as></speak>';
+		return Alexa::ssml($ssml)->endSession();
 	}
 
 	public function currentTemperature(){
@@ -87,6 +108,21 @@ class CarCooker extends  BaseController{
 		$result = Alexa::ssml($ssml)->endSession()->toJson();
 		\Log::debug($result);
 		return Alexa::ssml($ssml)->endSession();
+	}
+
+	private function getCookieQuote(){
+		$quotes = [
+			'Num num num num num',
+			'Cookies are made of butter and love',
+			'Life is better with fresh baked cookies',
+			'A balanced diet is a cookie in each hand',
+			'When the going gets tough, the tough make cookies',
+			'That’s the way the cookie crumbles'
+		];
+
+		$randomNumber = mt_rand(0,5);
+
+		return $quotes[$randomNumber];
 	}
 
 	/**
